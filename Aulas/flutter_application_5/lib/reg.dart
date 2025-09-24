@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-// PASSO 1: Criar uma classe para organizar os dados do usuário.
-// Isso torna o código mais limpo do que passar vários valores soltos.
+// Classe para organizar os dados do usuário.
 class UserData {
   final String name;
   final String email;
@@ -10,6 +9,7 @@ class UserData {
   UserData({required this.name, required this.email, required this.password});
 }
 
+// O seu widget da tela de cadastro.
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -19,14 +19,9 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _birthDateController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordObscured = true;
-  String? _gender;
-  bool _emailNotifications = true;
-  bool _phoneNotifications = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +40,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          // ... (outros TextFields como no seu código)
           TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -74,8 +68,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          // ... (outros widgets de Gênero e Notificações)
           const SizedBox(height: 32),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -83,14 +75,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               textStyle: const TextStyle(fontSize: 18),
             ),
             onPressed: () {
-              // PASSO 2: Ao pressionar o botão, criamos um objeto com os dados dos controllers.
+              // Cria um objeto com os dados dos controllers.
               final userData = UserData(
                 name: _nameController.text,
                 email: _emailController.text,
                 password: _passwordController.text,
               );
 
-              // Usamos Navigator.pop para fechar a tela e ENVIAR o objeto 'userData' de volta.
+              // Usa Navigator.pop para fechar a tela e ENVIAR o objeto 'userData' de volta.
               Navigator.pop(context, userData);
             },
             child: const Text('Cadastrar'),

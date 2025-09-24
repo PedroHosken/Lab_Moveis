@@ -1,122 +1,100 @@
+// arquivo: login_page.dart
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_5/reg.dart';
+import 'reg.dart'; // Importa a classe UserData
 
 class Login extends StatefulWidget {
   const Login({super.key});
+
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  // A variável de estado para controlar a aba ativa.
-  int _currentIndex = 0;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Esta é a função que contém a lógica que você pediu.
+  void _login() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final name = _nameController.text;
+
+    // AQUI ACONTECE A VALIDAÇÃO
+    if (email == 'admin@admin.com' && password == '12345') {
+      
+      // SE ESTIVER CERTO, ELE ENTRA AQUI E NAVEGA PARA A PÁGINA DE LISTA
+      Navigator.pushNamed(
+        context,
+        '/itemList', // O nome da rota para a página de lista
+        arguments: {'name': name.isNotEmpty ? name : 'Admin'},
+      );
+
+    } else {
+      // Se estiver errado, ele mostra o diálogo de erro.
+      _showErrorDialog('Dados inválidos', 'Usuário e/ou senha incorreto(a).');
+    }
+  }
+
+  void _navigateToRegistration() async {
+    final result = await Navigator.pushNamed(context, '/registration');
+
+    if (result != null && result is UserData) {
+      setState(() {
+        _nameController.text = result.name;
+        _emailController.text = result.email;
+        _passwordController.text = result.password;
+      });
+      _showSuccessDialog('Cadastro realizado com sucesso!');
+    }
+  }
+  
+  void _showErrorDialog(String title, String content) {
+    showDialog(context: context, builder: (context) => AlertDialog(
+      title: Text(title), content: Text(content),
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+    ));
+  }
+  
+  void _showSuccessDialog(String message) {
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.green,
+     ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // A estrutura do MaterialApp e Scaffold permanece a mesma.
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 58, 183, 93),
-        ),
-        useMaterial3: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+        backgroundColor: Colors.lightGreen,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          // O título agora muda conforme a aba selecionada.
-          title: Text(_currentIndex == 0 ? 'Login' : 'Minha Conta'),
-          backgroundColor: Colors.lightGreen,
-        ),
-        drawer: const Drawer(),
-
-        // AQUI ESTÁ A MUDANÇA PRINCIPAL
-        // O body agora é um IndexedStack.
-        body: IndexedStack(
-          index: _currentIndex, // Controlado pela variável de estado.
-          children: [
-            // FILHO 0: O seu formulário de login.
-            // (Exatamente o mesmo widget que estava no body antes).
-            Center(
-              child: Container(
-                width: 200,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const TextField(
-                      decoration: InputDecoration(labelText: "Nome"),
-                      style: TextStyle(color: Colors.purple, fontSize: 15),
-                    ),
-                    const SizedBox(height: 20),
-                    const TextField(
-                      decoration: InputDecoration(labelText: "E-mail"),
-                      style: TextStyle(color: Colors.purple, fontSize: 15),
-                    ),
-                    const SizedBox(height: 20),
-                    const TextField(
-                      decoration: InputDecoration(labelText: "Password"),
-                      style: TextStyle(color: Colors.purple, fontSize: 15),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Enter'),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          // AQUI ESTÁ A LÓGICA DE NAVEGAÇÃO
-                          onPressed: () {
-                            // Navigator.of(context) encontra o controlador de navegação. 
-                            // .push() "empurra" uma nova rota para a pilha. [cite: 1280]
-                            Navigator.of(context).push(
-                              // MaterialPageRoute cria a rota com a animação padrão. 
-                              MaterialPageRoute(
-                                // O builder constrói o widget da nova tela. 
-                                builder: (context) => const RegistrationScreen(),
-                              ),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                              foregroundColor: Colors.blue),
-                          child: const Text('Crie uma conta'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          width: 300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: _nameController, decoration: const InputDecoration(labelText: "Nome")),
+              const SizedBox(height: 20),
+              TextField(controller: _emailController, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: "E-mail")),
+              const SizedBox(height: 20),
+              TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: "Senha")),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                // O botão "Enter" chama a função _login
+                onPressed: _login, 
+                child: const Text('Enter')
               ),
-            ),
-
-            // FILHO 1: O conteúdo da página "Minha Conta".
-            const Center(
-              child: Text(
-                'Aqui ficarão as informações da sua conta.',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          ],
-        ),
-
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            // A lógica aqui permanece a mesma, atualizando o estado
-            // para que o IndexedStack mostre o filho correto.
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Minha Conta',
-            ),
-          ],
+              TextButton(
+                onPressed: _navigateToRegistration, 
+                child: const Text('Crie uma conta'),
+              )
+            ],
+          ),
         ),
       ),
     );
