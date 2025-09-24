@@ -1,7 +1,6 @@
-// arquivo: login_page.dart
 
 import 'package:flutter/material.dart';
-import 'reg.dart'; // Importa a classe UserData
+import 'registration_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,29 +14,24 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Esta é a função que contém a lógica que você pediu.
   void _login() {
     final email = _emailController.text;
     final password = _passwordController.text;
     final name = _nameController.text;
 
-    // AQUI ACONTECE A VALIDAÇÃO
     if (email == 'admin@admin.com' && password == '12345') {
-      
-      // SE ESTIVER CERTO, ELE ENTRA AQUI E NAVEGA PARA A PÁGINA DE LISTA
       Navigator.pushNamed(
         context,
-        '/itemList', // O nome da rota para a página de lista
+        '/itemList',
         arguments: {'name': name.isNotEmpty ? name : 'Admin'},
       );
-
     } else {
-      // Se estiver errado, ele mostra o diálogo de erro.
       _showErrorDialog('Dados inválidos', 'Usuário e/ou senha incorreto(a).');
     }
   }
 
   void _navigateToRegistration() async {
+    // CORRIGIDO: Chamando a rota '/registration' definida no main.dart
     final result = await Navigator.pushNamed(context, '/registration');
 
     if (result != null && result is UserData) {
@@ -72,28 +66,29 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.lightGreen,
       ),
       body: Center(
-        child: Container(
+        child: SingleChildScrollView( // Adicionado para evitar overflow em telas pequenas
           padding: const EdgeInsets.all(16.0),
-          width: 300,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(controller: _nameController, decoration: const InputDecoration(labelText: "Nome")),
-              const SizedBox(height: 20),
-              TextField(controller: _emailController, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: "E-mail")),
-              const SizedBox(height: 20),
-              TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: "Senha")),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                // O botão "Enter" chama a função _login
-                onPressed: _login, 
-                child: const Text('Enter')
-              ),
-              TextButton(
-                onPressed: _navigateToRegistration, 
-                child: const Text('Crie uma conta'),
-              )
-            ],
+          child: SizedBox(
+            width: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(controller: _nameController, decoration: const InputDecoration(labelText: "Nome")),
+                const SizedBox(height: 20),
+                TextField(controller: _emailController, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: "E-mail")),
+                const SizedBox(height: 20),
+                TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: "Senha")),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: _login, 
+                  child: const Text('Enter')
+                ),
+                TextButton(
+                  onPressed: _navigateToRegistration, 
+                  child: const Text('Crie uma conta'),
+                )
+              ],
+            ),
           ),
         ),
       ),

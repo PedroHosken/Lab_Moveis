@@ -1,6 +1,6 @@
+
 import 'package:flutter/material.dart';
 
-// Classe para organizar os dados do usuário.
 class UserData {
   final String name;
   final String email;
@@ -9,7 +9,6 @@ class UserData {
   UserData({required this.name, required this.email, required this.password});
 }
 
-// O seu widget da tela de cadastro.
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -75,14 +74,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               textStyle: const TextStyle(fontSize: 18),
             ),
             onPressed: () {
-              // Cria um objeto com os dados dos controllers.
               final userData = UserData(
                 name: _nameController.text,
                 email: _emailController.text,
                 password: _passwordController.text,
               );
-
-              // Usa Navigator.pop para fechar a tela e ENVIAR o objeto 'userData' de volta.
               Navigator.pop(context, userData);
             },
             child: const Text('Cadastrar'),

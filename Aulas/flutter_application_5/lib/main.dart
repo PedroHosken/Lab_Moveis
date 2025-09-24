@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
-import 'login.dart';
-import 'item.dart';
-import 'reg.dart'; // PASSO 1: Importar o arquivo da tela de cadastro.
+import 'login_page.dart';        
+import 'item_list_page.dart';     
+import 'registration_page.dart';  
 
 void main() {
   runApp(const Home());
@@ -21,8 +22,8 @@ class Home extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Login(),
-        // PASSO 2: Adicionar a nova rota nomeada para a tela de cadastro.
-        '/reg': (context) => const RegistrationScreen(),
+        // A rota para o registro agora é '/registration' para consistência
+        '/registration': (context) => const RegistrationScreen(),
         '/itemList': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
           final name = args['name'] ?? 'Usuário';
